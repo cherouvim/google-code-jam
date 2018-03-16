@@ -20,25 +20,26 @@ if (!fs.existsSync(file)) {
 	process.exit();
 }
 
-let numberOfProblems;
-let numberOfRopes;
-let caseNumber = 0;
+let amountOfCases = null,
+    caseNumber = 0,
+    numberOfRopes = null;
+
 
 // read file, solve problem cases
 lineReader.eachLine(file, function(line, last) {
-	if (!numberOfProblems) {
-		numberOfProblems = Number(line);
+	if (!amountOfCases) {
+		amountOfCases = Number(line);
 		return true;
 	}
 	if (!numberOfRopes) {
 		numberOfRopes = Number(line);
 		return true;
 	}
-	solveForRopes(++caseNumber, line.split(' '));
+	solve(++caseNumber, line.split(' '));
 	numberOfRopes = null;
 });
 
-function solveForRopes(caseNumber, ropes) {
+function solve(caseNumber, ropes) {
 	const reds = [];
 	const blues = [];
 	ropes.forEach(function(rope) {
