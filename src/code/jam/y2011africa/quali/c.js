@@ -52,12 +52,31 @@ lineReader.eachLine(file, function(line, last) {
 
 	// end of case, solve it
 	if (--w===0) {
+		debugger;
 		solve(++caseNumber, field, field[0].length, field.length);
 	}
 });
 
-function solve(caseNumber, field) {
-	let largestAreaFound = null;
+function solve(caseNumber, field, l, w) {
+	let largestAreaFound = 0;
+	for (let w1 = 0; w1 < w; w1++) {
+		for (let l1 = 0; l1 < l; l1++) {
+			// if starting point is obstacle, continue to next starting point
+			if (field[w1][l1]) continue;
+			let maxL2 = l;
+			for (let w2 = w1; w2 < w; w2++) {
+				for (let l2 = l1; l2 < maxL2; l2++) {
+					// hit obstacle on moving ending point, redefine max l boundary and break to next line
+					if (field[w2][l2]) {
+						maxL2 = l2;
+						break;
+					}
+					const currentArea = (l2 - l1 + 1) * (w2 - w1 + 1);
+					if (currentArea > largestAreaFound) largestAreaFound = currentArea;
+				}
+			}
+		}
+	}
 	console.log(`Case #${caseNumber}: ${largestAreaFound}`);
 }
 
