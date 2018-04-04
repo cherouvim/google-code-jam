@@ -72,4 +72,3 @@ function guessNumber() {
 	guess = Math.round((min + max) / 2);
 	console.log(guess);
 }
-
