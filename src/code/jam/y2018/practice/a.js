@@ -2,6 +2,7 @@
 
 // deps
 const readline = require('readline');
+const fs = require('fs');
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -17,50 +18,56 @@ let numberOfProblems,
     guesses,
     guess;
 
+log('*** starting ***');
+
 // read lines, solve problem cases
 rl.on('line', function(line){
 	// get number of problems
 	if (!numberOfProblems) {
 		numberOfProblems = Number(line);
-		// if (debug) console.log('got number of problems');
+		log(`got number of problems: ${numberOfProblems}`);
 		return true;
 	}
 	// get problem min/max
 	if (!min && !max) {
 		[min, max] = line.split(' ').map(Number);
 		min++; // make inclusive
-		// if (debug) console.log('got minmax');
+		log(`got minmax: ${min}, ${max}`);
 		return true;
 	}
 	// get guesses count
 	if (!guesses) {
 		guesses = Number(line);
-		// if (debug) console.log('got guesses, will guess');
+		log(`got guesses: ${guesses}, will now guess`);
 		guessNumber();
 		return true;
 	}
 	// process result
 	if (line==='CORRECT') {
-		// if (debug) console.log('got correct, will reset and decrease number of problems');
+		log(`got correct, will reset and decrease number of problems, which currently is ${numberOfProblems}`);
 		min = max = guesses = guess = null;
 		numberOfProblems--;
-		if (numberOfProblems===0) rl.close();
+		if (numberOfProblems===0) {
+			log('number of problems is 0');
+			rl.close();
+			process.exit(); // don't know why this is needed for the python tester to complete
+		}
 		return true;
 	}
 	if (line==='TOO_SMALL') {
-		// if (debug) console.log('got too small, will attempt another one');
+		log('got too small, will attempt another one');
 		min = guess + 1;
 		guessNumber();
 		return true;
 	}
 	if (line==='TOO_BIG') {
-		// if (debug) console.log('got too big, will attempt another one');
+		log('got too big, will attempt another one');
 		max = guess - 1;
 		guessNumber();
 		return true;
 	}
 	if (line==='WRONG_ANSWER') {
-		// if (debug) console.log('got wrong answer');
+		log('got wrong answer');
 		rl.close();
 		return true;
 	}
@@ -70,5 +77,10 @@ rl.on('line', function(line){
 function guessNumber() {
 	guesses--;
 	guess = Math.round((min + max) / 2);
+	log(`guessing ${guess}, and guesses remaining are ${guesses}`);
 	console.log(guess);
+}
+
+function log(text) {
+	// fs.appendFileSync("/tmp/google-code-jam-temp.log", text + '\n');
 }
