@@ -1,30 +1,23 @@
-"use strict";
-
-const readline = require("readline");
-const rl = readline.createInterface({
-	input: process.stdin,
-	output: process.stdout,
-	terminal: false
-});
-
 let amountOfCases = null,
 	count = null,
 	caseNumber = 0;
 
 // read lines, solve problem cases
-rl.on("line", function(line) {
-	if (!amountOfCases) {
-		amountOfCases = Number(line);
-		return true;
-	}
-	if (!count) {
-		count = Number(line.split(" ")[1]);
-		return true;
-	}
-	solve(++caseNumber, line.split(" ").map(Number), count);
-	count = null;
-	if (caseNumber === amountOfCases) process.exit();
-});
+require("readline")
+	.createInterface({ input: process.stdin })
+	.on("line", function(line) {
+		if (!amountOfCases) {
+			amountOfCases = Number(line);
+			return true;
+		}
+		if (!count) {
+			count = Number(line.split(" ")[1]);
+			return true;
+		}
+		solve(++caseNumber, line.split(" ").map(Number), count);
+		count = null;
+		if (caseNumber === amountOfCases) process.exit();
+	});
 
 function solve(caseNumber, numbers, count) {
 	const divisors = getDivisors(numbers, count);
